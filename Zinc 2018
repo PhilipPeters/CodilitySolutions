@@ -1,0 +1,38 @@
+""" Solution to the Zinc 2018 problem, link here: https://app.codility.com/programmers/challenges/zinc2018/
+Short Version: Given an array A, count the number of different triplets (a, b, c) in which a occurs before b and b occurs before c.
+
+As usual, we use a dynamic programming approach, but we need not to just track the number of triplets up to a certain point, but
+also the number of pairs up until a certain point, and the number of singletons (i.e. individual elements). We also need a way of 
+keeping track of how many 'new' pairs or singletons appear, so we use a separate structure (a dictionary) to record how many tuples are 
+seen, ending at a certain value.
+
+Notes in the code: dictionary.get(key, value) returns dictionary[key] if this is a valid operation, else it just returns value.
+                   this is just a work-around for not using a defaultdict, and performs in exactly the same way.
+
+The array tuples[[]] records the number of distinct tuples seen up to a certain point, of a certain length, i.e. tuples[i][n] records
+the number of distinct tuples of length i up until the point n.
+
+Code is below: """
+
+def solution(A):
+    
+    N = len(A)
+    if len(A) < 3:
+        return 0
+    tuples = [[0 for i in range(N+1)] for i in range(4)]
+    M = set()
+    for n in range(1, N+1):
+        M.add(A[n-1])
+        tuples[1][n] = len(M)
+    for k in range(2, 4):
+        tuples[k][k] = 1
+        """This dictionary records the number of length k tuples ending with element A[k-1]. Note that if we have a sub-array ending in x, 
+        then the number of k-tuples ending in x is the total number of k-1 tuples in the sub-array of this sub-array without the last element"""
+        count_k_group_end_with_num_dict = {}
+        count_k_group_end_with_num_dict[A[k-1]] = 1
+        for n in range(k+1, N+1):
+            """w records the number of 'new' k tuples ending with the current element"""
+            w = tuples[k-1][n-1] - count_k_group_end_with_num_dict.get(A[n-1], 0)
+            tuples[k][n] = (tuples[k][n-1] + w)
+            count_k_group_end_with_num_dict[A[n-1]] = (count_k_group_end_with_num_dict.get(A[n-1], 0) + w)
+    return tuples[3][N]
