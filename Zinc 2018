@@ -36,3 +36,6 @@ def solution(A):
             tuples[k][n] = (tuples[k][n-1] + w)
             count_k_group_end_with_num_dict[A[n-1]] = (count_k_group_end_with_num_dict.get(A[n-1], 0) + w)
     return tuples[3][N]
+
+""" Temporal complexity: each of the n steps in the for loop for a given k takes O(N) steps, and there are 2 values for k, so temporal complexity is O(N).
+Spatial complexity: the largest data structures are tuples (size O(N)) and count_k_group_end_with_num_dict (size O(N)) so our spatial complexity is O(N).
