@@ -1,0 +1,41 @@
+""" Solution to the Germanium 2018 problem, link here: https://app.codility.com/programmers/challenges/germanium2018/
+Short version: You have a deck of cards in which each card has two numbers: one on the front and one on the back. Flip some cards over so as to maximize the smallest integer that's not present on any card's front.
+
+This looks like a simple dynamic programming problem with some clear optimal sub-structure-it is not. Maybe there is an a much easier solution, but 
+given the principles uncovered in the solution I will deliver, it appears that this is actually the easiest way to go (we are proving definite relations between the problem and an algorithm to solve it).
+
+First, we translate the problem into graph theory. We use an undirected graph, with Our vertex set is the numbers on th ecards, i.e. just positive integers.
+We draw an edge between i and j, denoted ij, if there is a card with one side displaying i and one side displaying j. Note if there is a card
+which shows the same number on both sides, we have a 'mini loop' from this vertex to itself. If we have 2 identical cards with x on one side, y on the other, 
+then we have 2 edges xy.
+
+Now we decompose our graph into its connected components. Then we can now see that we only need to solve the problem for each connected component,
+then take the minimum of the answers for each component, and this is our answer.
+
+We only have 2 cases: either we have a cycle in our component, or we don't. If we have a cycle (I am including our 'mini loop' 1 cycles, or a 2-cycle, i.e. 2 of the same edges, as examples of cycles), then every point in the component is representable.
+If we do not have a cycle, then our graph is actually a tree (elementary graph theory). Then we know we cannot possibly include every vertex, but we can include all but 1 vertex, and we can choose this vertex.
+To see this, imagine choosing a vertex v in our component, and adding the card (v,v). Then our component has a cycle, so every point can be shown. So removing this extra card, we have that every number except v can be shown.
+Now we have a list of all numbers, in our vertex set, that cannot be shown (a maximal choice). Then we subtract this from our vetex set, to form a new set, and tatke the smallest positive integer not in this set, and that is our answer.
+
+This is implemented in the code below: """
+
+vetex_set = set(A) + set(B)
+
+#First I will write code to determine the connected components of our 'graph'
+from collections import defaultdict
+component_dict = defaultdict
+connected_list = []
+v = vertex_set[0]
+n = len(A)
+for i in range(0, n):
+if component_dict[A[i]] == 0 and component_dict[B[i]] == 0:
+  component_dict[A[i]]
+
+
+
+
+
+#Now we have a list of connected components, each in the form of sub-collections of cards.
+#It is easy to test whether we have a cycle: just test if the number of vertices = number of edges + 1 (basic theory from trees).
+
+coll
